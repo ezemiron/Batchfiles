@@ -31,6 +31,7 @@ for (fileandpath in filesandpaths){
 #this should no longer happen given that both of these are taken from 
 #the same file and not manually selected
     
+    cat(paste("Segmenting file:",filename ))
 #    The segmentation:
     seg<-segment(chromatin,7,0.1,1/3,mask=mask, maxit=30,varfixed=TRUE,inforce.nclust=TRUE,start="equal");
     
@@ -39,7 +40,7 @@ for (fileandpath in filesandpaths){
     
     savename <- gsub(".tif","_SEG.tif",filename)
     savepath <- paste(dirchosen, savename, sep="/")
-    writeImage (x=segscale, file=savename));
+    writeImage (x=segscale, file=savename);
     
     
 }
