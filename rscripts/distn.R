@@ -69,7 +69,10 @@ for (fileandpath in filesandpaths){
         for (i in diff){
                 dist1nb <- dist1n
                 dist1nb[length(dist1n)+i] <- 0
+                dist1[length(dist1n)+i] <- 0
+                
                         }
+    dist1n <- dist1nb
     norm1 <- dist1nb/classnumn
     lognorm1 <- log2(norm1) 
         }
@@ -81,51 +84,53 @@ for (fileandpath in filesandpaths){
 
 ##############For a second coordinate set, repeat the process:
 
-cat("coordinate data 2\n")
-    # add here the link from image to csvs 
-    csv2name <- gsub("_SEG.tif","-data_2.csv",filename);
-    csv2path <- paste(dirchosen, csv2name, sep= "/");
-    # read the csvs:
-    csv2  <- read.csv(csv2path, header=TRUE);
+#cat("coordinate data 2\n")
+#    # add here the link from image to csvs 
+#    csv2name <- gsub("_SEG.tif","-data_2.csv",filename);
+#    csv2path <- paste(dirchosen, csv2name, sep= "/");
+#    # read the csvs:
+#    csv2  <- read.csv(csv2path, header=TRUE);
 
 
-    #  convert and round the nm distances to pixels and remove unwanted cols 
-    csv2r  <- round(data.frame(csv2[1]/41, csv2[2]/41, csv2[3]/125));
+#    #  convert and round the nm distances to pixels and remove unwanted cols 
+#    csv2r  <- round(data.frame(csv2[1]/41, csv2[2]/41, csv2[3]/125));
 
-        
-    # linear index of these rounded tables (sub 2 ind)
-    # x <- csv1r$x
-    # y <- csv1r$y
-    # z <- csv1r$z
-    # for 3D ind <- (m.n)(z-1)+m(c-1)+r 
-    ind2  <- ((dim(img)[1]*dim(img)[2])*(csv2r$z - 1))+((csv2r$y -1)*dim(img)[1])+csv2$x
+#        
+#    # linear index of these rounded tables (sub 2 ind)
+#    # x <- csv1r$x
+#    # y <- csv1r$y
+#    # z <- csv1r$z
+#    # for 3D ind <- (m.n)(z-1)+m(c-1)+r 
+#    ind2  <- ((dim(img)[1]*dim(img)[2])*(csv2r$z - 1))+((csv2r$y -1)*dim(img)[1])+csv2$x
 
 
-    # index: img(index)
-    imind2 <- img[ind2];
+#    # index: img(index)
+#    imind2 <- img[ind2];
 
-    # count how many spots fell in each bin
-    dist2  <- as.numeric(table(imind2));
-    dist2n <- dist2/sum(dist2);
-    
-    if (length(dist2n)==length(classnumn))
-            { norm2 <- dist2n/classnumn
-              lognorm2  <- log(norm2)
-           }
-        if (length(dist2n)<length(classnumn))
-           {diff2 <- data.frame(1:(length(classnumn)-length(dist2n)))
-           for (i in diff2){
-                   dist2nb <- dist2n
-                    dist2nb[length(dist2n)+i] <- 0
-                           }
-        norm2 <- dist2nb/classnumn
-        lognorm2 <- log2(norm2) 
-        }
-        
-    compile2 <- data.frame(dist2,dist2n,classnum,classnumn,norm2,lognorm2)
-    savename <- gsub(".csv","", csv2name);
-    savename <- paste0(savename, "-distn.csv");
-    write.csv(compile2,savename);
+#    # count how many spots fell in each bin
+#    dist2  <- as.numeric(table(imind2));
+#    dist2n <- dist2/sum(dist2);
+#    
+#    if (length(dist2n)==length(classnumn))
+#            { norm2 <- dist2n/classnumn
+#              lognorm2  <- log(norm2)
+#           }
+#        if (length(dist2n)<length(classnumn))
+#           {diff2 <- data.frame(1:(length(classnumn)-length(dist2n)))
+#           for (i in diff2){
+#                   dist2nb <- dist2n
+#                    dist2nb[length(dist2n)+i] <- 0
+#                    dist2[length(dist2n)+i] <- 0
+#                           }
+#        dist2n <- dist2nb
+#        norm2 <- dist2nb/classnumn
+#        lognorm2 <- log2(norm2) 
+#        }
+#        
+#    compile2 <- data.frame(dist2,dist2n,classnum,classnumn,norm2,lognorm2)
+#    savename <- gsub(".csv","", csv2name);
+#    savename <- paste0(savename, "-distn.csv");
+#    write.csv(compile2,savename);
 
 }
 
