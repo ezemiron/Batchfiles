@@ -40,7 +40,7 @@ for (fileandpath in filesandpaths){
     
     savename <- gsub(".tif","_SEG.tif",filename)
     savepath <- paste(dirchosen, savename, sep="/")
-    writeImage (x=segscale, file=savename);
+    writeTIF (segscale, savename);
     
     
 }
