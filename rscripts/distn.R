@@ -60,11 +60,12 @@ for (fileandpath in filesandpaths){
           lognorm1  <- log(norm1)
         }
     if (length(dist1n)<length(classnumn))
-        {diff <- c((length(classnumn)-length(dist1n)):1)
+        {diff <- data.frame(1:(length(classnumn)-length(dist1n)))
         for (i in diff){
-                dist1n[length(dist1n)+i] <- 0
+                dist1nb <- dist1n
+                dist1nb[length(dist1n)+i] <- 0
                         }
-    norm1 <- dist1n/classnumn
+    norm1 <- dist1nb/classnumn
     lognorm1 <- log2(norm1) 
         }
     savename <- gsub(".csv","", csv1name);
