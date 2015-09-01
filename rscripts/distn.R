@@ -19,16 +19,18 @@ filesandpaths <- list.files(path=dirchosen, pattern="*SEG.tif", full.names=TRUE)
 for (fileandpath in filesandpaths){
     # read segmented image
     img <- readTIF (fileandpath); #This opens the seg 16bit tiff with all channels correclty
-    filename <- basename(fileandpath)
+    filename <- basename(fileandpath);
+    
+    cat(paste("Processing file:",filename,"\n"));
     # add here the link from image to csvs 
-    csv1name <- gsub("_SEG.tif","-data_1.csv",filename)
-    csv1path <- paste(dirchosen, csv1name, sep= "/")
+    csv1name <- gsub("_SEG.tif","-data_1.csv",filename);
+    csv1path <- paste(dirchosen, csv1name, sep= "/");
     # read the csvs:
-    csv1  <- read.csv(csv1path, header=TRUE)
+    csv1  <- read.csv(csv1path, header=TRUE);
 
 
     #  convert and round the nm distances to pixels and remove unwanted cols 
-    csv1r  <- round(data.frame(csv1[1]/41, csv1[2]/41, csv1[3]/125))
+    csv1r  <- round(data.frame(csv1[1]/41, csv1[2]/41, csv1[3]/125));
 
         
     # linear index of these rounded tables (sub 2 ind)
@@ -40,17 +42,17 @@ for (fileandpath in filesandpaths){
 
 
     # index: img(index)
-    imind1 <- img[ind1]
+    imind1 <- img[ind1];
 
     # count how many spots fell in each bin
-    dist1  <- as.numeric(table(imind1))
+    dist1  <- as.numeric(table(imind1));
 
 #    distn <- as.numeric(names(table(imind1)))
-    classnum  <- as.numeric(table(img))
+    classnum  <- as.numeric(table(img));
     # for normalisation find how many pixels in each class
-    dist1n <- dist1/sum(dist1)
+    dist1n <- dist1/sum(dist1);
 
-    classnumn <- classnum/sum(classnum)
+    classnumn <- classnum/sum(classnum);
     # divide distns by this
     # and then normalise internally to 100%
     if (length(dist1n)==length(classnumn))
@@ -65,9 +67,9 @@ for (fileandpath in filesandpaths){
     norm1 <- dist1n/classnumn
     lognorm1 <- log2(norm1) 
         }
-    savename <- gsub(".csv","", csv1name)
-    savename <- paste0(savename, "-distn.csv")
-    write.csv(lognorm1,savename)
+    savename <- gsub(".csv","", csv1name);
+    savename <- paste0(savename, "-distn.csv");
+    write.csv(lognorm1,savename);
 
 ##For a second csv, repeat the process:
 
