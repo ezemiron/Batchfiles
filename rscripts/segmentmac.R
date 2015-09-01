@@ -31,7 +31,7 @@ for (fileandpath in filesandpaths){
 #this should no longer happen given that both of these are taken from 
 #the same file and not manually selected
     
-    cat(paste("Segmenting file:",filename ))
+    cat(paste("Segmenting file:",filename,"\n" ))
 #    The segmentation:
     seg<-segment(chromatin,7,0.1,1/3,mask=mask, maxit=30,varfixed=TRUE,inforce.nclust=TRUE,start="equal");
     
