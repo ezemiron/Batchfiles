@@ -36,28 +36,49 @@ for (fileandpath in filesandpaths){
 
     #  convert and round the nm distances to pixels and remove unwanted cols 
     csv1r  <- round(data.frame(csv1[1]/41, csv1[2]/41, csv1[3]/125));
-
-        
-    # linear index of these rounded tables (sub 2 ind)
-    # x <- csv1r$x
-    # y <- csv1r$y
-    # z <- csv1r$z
-    # for 3D ind <- (m.n)(z-1)+m(c-1)+r 
-    ind1  <- ((dim(img)[1]*dim(img)[2])*(csv1r$z - 1))+((csv1r$y -1)*dim(img)[1])+csv1$x
-
+    
+    
+    # for 3D linear index: ind <- (m.n)(z-1)+m(c-1)+r 
+    # remember that
+    # m = length of columns, determined by the 1st dim of img
+    # n = length of rows, determined by the 2nd dim of img
+    # c = column number, determined by the x coordinate
+    # r = row number, determined by the y coordinate
+    # z = optical plane number, determined by z coordinate
+    ind1  <- ((dim(img)[1]*dim(img)[2])*(csv1r$z - 1))+((csv1r$x -1)*dim(img)[1])+csv1r$y
 
     # index: img(index)
     imind1 <- img[ind1];
 
+    # for normalisation find how many pixels in each class,ie:
+    # count the size of bins, and remove background:
+    classnum <- as.numeric(table(img));
+    if(0 == min(img))
+    {
+      cat("removing background \n")
+      classnum <- classnum[2:length(classnum)]
+    }else{
+    cat("No background detected \n")
+        }
+    
+    classnumn <- classnum/sum(classnum);
+    
     # count how many spots fell in each bin
     dist1  <- as.numeric(table(imind1));
-
-#    distn <- as.numeric(names(table(imind1)))
-    classnum  <- as.numeric(table(img));
-    # for normalisation find how many pixels in each class
+#     Removes spots found in background if any and warn:
+    if(0 == min(imind1))
+    {
+      bgnum <- as.numeric(table(imind1)[1])
+      tnum <- sum(table(imind1))
+      bgwarn <- paste(bgnum,"out of",tnum,"Data-1 coordinates found outside nucleus! -> Ignored \n")
+      cat(bgwarn)
+      dist1 <- dist1[2:length(dist1)]
+     
+    }
+    
     dist1n <- dist1/sum(dist1);
 
-    classnumn <- classnum/sum(classnum);
+    
     # divide distns by this
     # and then normalise internally to 100%
     if (length(dist1n)==length(classnumn))
@@ -69,15 +90,14 @@ for (fileandpath in filesandpaths){
         for (i in diff){
                 dist1nb <- dist1n
                 dist1nb[length(dist1n)+i] <- 0
-                dist1[length(dist1n)+i] <- 0
-                
                         }
-    dist1n <- dist1nb
     norm1 <- dist1nb/classnumn
     lognorm1 <- log2(norm1) 
         }
         
-    compile1 <- data.frame(dist1,dist1n,classnum,classnumn,norm1,lognorm1)
+
+    compile1 <- data.frame(class=1:length(classnum),dist1,dist1n,classnum,classnumn,norm1,lognorm1)
+
     savename <- gsub(".csv","", csv1name);
     savename <- paste0(savename, "-distn.csv");
     write.csv(compile1,savename);
@@ -95,13 +115,9 @@ for (fileandpath in filesandpaths){
 #    #  convert and round the nm distances to pixels and remove unwanted cols 
 #    csv2r  <- round(data.frame(csv2[1]/41, csv2[2]/41, csv2[3]/125));
 
-#        
-#    # linear index of these rounded tables (sub 2 ind)
-#    # x <- csv1r$x
-#    # y <- csv1r$y
-#    # z <- csv1r$z
+
 #    # for 3D ind <- (m.n)(z-1)+m(c-1)+r 
-#    ind2  <- ((dim(img)[1]*dim(img)[2])*(csv2r$z - 1))+((csv2r$y -1)*dim(img)[1])+csv2$x
+#    ind2  <- ((dim(img)[1]*dim(img)[2])*(csv2r$z - 1))+((csv2r$x -1)*dim(img)[1])+csv2r$y
 
 
 #    # index: img(index)
@@ -109,20 +125,25 @@ for (fileandpath in filesandpaths){
 
 #    # count how many spots fell in each bin
 #    dist2  <- as.numeric(table(imind2));
+#    
+#    if(0 == min(imind2))
+#      {
+#       cat("Data 2 coordinates found outside nucleus! -> Ignored")
+#       dist2 <- dist2[2:length(dist2)]
+#      }
+
 #    dist2n <- dist2/sum(dist2);
 #    
 #    if (length(dist2n)==length(classnumn))
-#            { norm2 <- dist2n/classnumn
-#              lognorm2  <- log(norm2)
-#           }
-#        if (length(dist2n)<length(classnumn))
+#        { norm2 <- dist2n/classnumn
+#          lognorm2  <- log(norm2)
+#        }
+#    if (length(dist2n)<length(classnumn))
 #           {diff2 <- data.frame(1:(length(classnumn)-length(dist2n)))
 #           for (i in diff2){
 #                   dist2nb <- dist2n
 #                    dist2nb[length(dist2n)+i] <- 0
-#                    dist2[length(dist2n)+i] <- 0
-#                           }
-#        dist2n <- dist2nb
+#                }
 #        norm2 <- dist2nb/classnumn
 #        lognorm2 <- log2(norm2) 
 #        }
@@ -134,3 +155,8 @@ for (fileandpath in filesandpaths){
 
 }
 
+# df <- data.frame(class=1:length(lognorm1),lognorm1, lognorm2)
+# lim <- c(min(df[2:3]),max(df[2:3]))
+# barplot(rbind(lognorm1,lognorm2),
+#         beside= TRUE, col=c("limegreen","firebrick1"), 
+#         ylab = "Fold Change",xlab = "Chromatin Classes")
