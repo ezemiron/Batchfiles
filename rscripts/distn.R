@@ -55,7 +55,7 @@ for (fileandpath in filesandpaths){
     classnum <- as.numeric(table(img));
     if(0 == min(img))
     {
-      cat("removing background \n")
+      cat("Removing background \n")
       classnum <- classnum[2:length(classnum)]
     }else{
     cat("No background detected \n")
@@ -73,8 +73,9 @@ for (fileandpath in filesandpaths){
       bgwarn <- paste(bgnum,"out of",tnum,"Data-1 coordinates found outside nucleus! -> Ignored \n")
       cat(bgwarn)
       dist1 <- dist1[2:length(dist1)]
-     
-    }
+     }else{
+    cat("All coordinates in nucleus \n")
+        }
     
     dist1n <- dist1/sum(dist1);
 
@@ -88,10 +89,19 @@ for (fileandpath in filesandpaths){
     if (length(dist1n)<length(classnumn))
         {diff <- data.frame(1:(length(classnumn)-length(dist1n)))
         for (i in diff){
+                emptyclass <- length(dist1n)+i
+                spotwarn <- paste("No spots found for class",emptyclass)
                 dist1nb <- dist1n
                 dist1nb[length(dist1n)+i] <- 0
+                dist1n <- dist1nb
+
+                cat(spotwarn)
+                dist1b <- dist1
+                dist1b[length(dist1)+i] <- 0
+                dist1 <- dist1b
+                
                         }
-    norm1 <- dist1nb/classnumn
+    norm1 <- dist1n/classnumn
     lognorm1 <- log2(norm1) 
         }
         
