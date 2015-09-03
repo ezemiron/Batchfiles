@@ -49,6 +49,7 @@ for (fileandpath in filesandpaths){
 
     # index: img(index)
     imind1 <- img[ind1];
+    imind1 <- round(imind1*7)
 
     # for normalisation find how many pixels in each class,ie:
     # count the size of bins, and remove background:
@@ -64,7 +65,10 @@ for (fileandpath in filesandpaths){
     classnumn <- classnum/sum(classnum);
     
     # count how many spots fell in each bin
-    dist1  <- as.numeric(table(imind1));
+    dist1t  <- tabulate(imind1, nbins=length(classnum))
+    
+    
+#    dist1  <- as.numeric(table(imind1));
 #     Removes spots found in background if any and warn:
     if(0 == min(imind1))
     {
@@ -72,41 +76,46 @@ for (fileandpath in filesandpaths){
       tnum <- sum(table(imind1))
       bgwarn <- paste(bgnum,"out of",tnum,"Data-1 coordinates found outside nucleus! -> Ignored \n")
       cat(bgwarn)
-      dist1 <- dist1[2:length(dist1)]
+#      dist1 <- dist1[2:length(dist1)]
+#      dist1t <- dist1t[2:length(dist1t)]
+#      dist1tnames <- dist1tnames[2:length(dist1tnames)]
      }else{
     cat("All coordinates in nucleus \n")
         }
     
-    dist1n <- dist1/sum(dist1);
 
     
+    dist1n <- dist1t/sum(dist1t);
+
+    #Need to check for empty classes
     # divide distns by this
     # and then normalise internally to 100%
-    if (length(dist1n)==length(classnumn))
-        { norm1 <- dist1n/classnumn
-          lognorm1  <- log(norm1)
-        }
-    if (length(dist1n)<length(classnumn))
-        {diff <- data.frame(1:(length(classnumn)-length(dist1n)))
-        for (i in diff){
-                emptyclass <- length(dist1n)+i
-                spotwarn <- paste("No spots found for class",emptyclass)
-                dist1nb <- dist1n
-                dist1nb[length(dist1n)+i] <- 0
-                dist1n <- dist1nb
+#    if (length(dist1n)==length(classnumn))
+#        { norm1 <- dist1n/classnumn
+#          lognorm1  <- log(norm1)
+#        }
+#    if (length(dist1n)<length(classnumn))
+#        {diff <- data.frame(1:(length(classnumn)-length(dist1n)))
+#        for (i in diff){
+#                emptyclass <- length(dist1n)+i
+#                spotwarn <- paste("No spots found for class",emptyclass,"\n")
+#                dist1nb <- dist1n
+#                dist1nb[length(dist1n)+i] <- 0
+#                dist1n <- dist1nb
 
-                cat(spotwarn)
-                dist1b <- dist1
-                dist1b[length(dist1)+i] <- 0
-                dist1 <- dist1b
-                
-                        }
+#                cat(spotwarn)
+#                dist1b <- dist1
+#                dist1b[length(dist1)+i] <- 0
+#                dist1 <- dist1b
+#                
+#                        }
+#    norm1 <- dist1n/classnumn
+#    lognorm1 <- log2(norm1) 
+#        }
+        
     norm1 <- dist1n/classnumn
     lognorm1 <- log2(norm1) 
-        }
-        
-
-    compile1 <- data.frame(class=1:length(classnum),dist1,dist1n,classnum,classnumn,norm1,lognorm1)
+    compile1 <- data.frame(class=1:length(classnum),dist1t,dist1n,classnum,classnumn,norm1,lognorm1)
 
     savename <- gsub(".csv","", csv1name);
     savename <- paste0(savename, "-distn.csv");
@@ -170,3 +179,7 @@ for (fileandpath in filesandpaths){
 # barplot(rbind(lognorm1,lognorm2),
 #         beside= TRUE, col=c("limegreen","firebrick1"), 
 #         ylab = "Fold Change",xlab = "Chromatin Classes")
+
+rm(list=ls())
+
+
