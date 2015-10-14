@@ -20,8 +20,10 @@ for (i=0; i<list.length; i++)
           RAW=replace(SIR,"(_SIR.dv)",".dv");
           //runs the SIMcheck 16bit mode threshold (16bit):
           run("Threshold and 16-bit Conversion", "auto-scale");
-          THR=replace(SIR, "(.dv)","_THR");
-          
+          THR=replace(SIR, "(.dv)","_THR-1");
+          saveAs("TIFF",dir2+THR);     //saves as a new tiff in dir2
+          THR=getTitle();
+
       //Open raw .dv
       open(RAW);
 
@@ -41,10 +43,9 @@ for (i=0; i<list.length; i++)
           run("Multiply...", "value=257 stack");
 
       //apply the 16bit modulation mask
-      imageCalculator("AND create stack",
-      THR,"scaled");
+      imageCalculator("AND create stack",THR,"scaled");
 
-      saveAs("TIFF",dir2+string+"_THR");     //saves as a new tiff in dir2
+      saveAs("TIFF",dir2+string+"_THR-mod");     //saves as a new tiff in dir2
 
       while (nImages>0) 
           { 
