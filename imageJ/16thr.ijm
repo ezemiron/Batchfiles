@@ -28,9 +28,7 @@ for (i=0; i<list.length; i++)
           //make the SIMcheck modulation contrast (32bit)
           run("Modulation Contrast", "angles=3 phases=5 z=1");
           //make the same size
-//          dims=getDimensions(width, height, channels, slices, frames);
-          slices=5;
-          run("Scale...","x=2 y=2 z=1.0 width=512 height=512 depth="+slices+"interpolation=Bicubic average create title=scaled");
+          run("Scale...","x=2 y=2 z=1.0 width=512 height=512 interpolation=Bicubic average create title=scaled");
           //run("Threshold...");
           setThreshold(5.0000, 50.0000);
           run("NaN Background", "stack");
