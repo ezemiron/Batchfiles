@@ -1,4 +1,5 @@
 
+
 dir1 = getDirectory("Choose Source Directory ");
 dir2 = getDirectory("Choose Destination Directory ");
 list = getFileList(dir1);     //gets list of files in dir1
@@ -19,17 +20,19 @@ for (i=0; i<list.length; i++)
           RAW=replace(SIR,"(_SIR.dv)",".dv");
           //runs the SIMcheck 16bit mode threshold (16bit):
           run("Threshold and 16-bit Conversion", "auto-scale");
-
+          THR=replace(SIR, "(.dv)","_THR");
+          
       //Open raw .dv
       open(RAW);
 
           //make the SIMcheck modulation contrast (32bit)
           run("Modulation Contrast", "angles=3 phases=5 z=1");
           //make the same size
-          run("Scale...", 
-          "x=2 y=2 z=1.0 width=512 height=512 depth=33 interpolation=Bicubic average create title=scaled");
+//          dims=getDimensions(width, height, channels, slices, frames);
+          slices=5;
+          run("Scale...","x=2 y=2 z=1.0 width=512 height=512 depth="+slices+"interpolation=Bicubic average create title=scaled");
           //run("Threshold...");
-          setThreshold(6.0000, 50.0000);
+          setThreshold(5.0000, 50.0000);
           run("NaN Background", "stack");
           //make it a binary mask (8bit)
           run("Convert to Mask", "method=Default background=Default");
@@ -41,10 +44,15 @@ for (i=0; i<list.length; i++)
 
       //apply the 16bit modulation mask
       imageCalculator("AND create stack",
-      string+"_THR","scaled");
+      THR,"scaled");
 
-    saveAs("TIFF",dir2+string+"_modmask");     //saves as a new tiff in dir2
-    close();
+      saveAs("TIFF",dir2+string+"_THR");     //saves as a new tiff in dir2
+
+      while (nImages>0) 
+          { 
+          selectImage(nImages); 
+          close(); 
+          }
     }
   
 
