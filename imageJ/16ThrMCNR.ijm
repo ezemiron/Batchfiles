@@ -11,16 +11,16 @@ for (i=0; i<list.length; i++)
     string=replace(list[i],"(.dv)",""); 
 
 
-    if (endsWith(filename, "SIR.dv")) 
+    if (endsWith(filename, "SIR_EAL.dv")) 
     {
 
       open(filename);
 
           SIR=getTitle();
-          RAW=replace(SIR,"(_SIR.dv)",".dv");
+          RAW=replace(SIR,"(_SIR_EAL.dv)","_EAL.dv");
           //runs the SIMcheck 16bit mode threshold (16bit):
           run("Threshold and 16-bit Conversion", "auto-scale");
-          THR=replace(SIR, "(.dv)","_THR-1");
+          THR=replace(SIR, "(.dv)","_THR");
           saveAs("TIFF",dir2+THR);     //saves as a new tiff in dir2
           THR=getTitle();
 
