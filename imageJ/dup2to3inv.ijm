@@ -2,7 +2,7 @@
 dir1 = getDirectory("Choose Source Directory ");
 dir2 = getDirectory("Choose Destination Directory ");
 list = getFileList(dir1);     //gets list of files in dir1
-//setBatchMode(true);
+setBatchMode(true);
 for (i=0; i<list.length; i++) {
     showProgress(i+1, list.length);
     filename = dir1 + list[i];
