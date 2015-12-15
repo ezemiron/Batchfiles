@@ -1,0 +1,13 @@
+
+#Need to make this into a small shell script. for now use the commands
+#to copy files from micron to my archives after all tifs and dvs have been 
+#imported to Omero.
+
+#ls | grep -v -e '\.tif$' -e '\.dv$'
+
+#grep -v -Z -e '\.tif$' -e '\.dv$' | xargs -0 -I{} mv {} ~/Documents/Microscopy/2015/2015.08/EM15-08-B/
+
+
+
+#Use this to move all files not tifs or dvs from directory "." to another directory:
+find . -type f ! -name "*.tif" ! -name "*.dv" -exec mv {} ~/Documents/Microscopy/2015/2015.08/EM15-08-B/ \;
