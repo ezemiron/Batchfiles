@@ -16,7 +16,7 @@ varname  <- readline(prompt = "Enter immunofluorescense target:")
 # df  <- data.frame(1:7)
 # df[1] <- NULL
 df  <- data.frame(class=1:7)
-df# generates a list of files in that directory:
+#df generates a list of files in that directory:
 allfilesandpaths <- list.files(path=dirchosen, pattern= varname, full.names=TRUE);
 filesandpaths  <- grep("*-distn.csv",allfilesandpaths, value = TRUE)
 for (fileandpath in filesandpaths){
