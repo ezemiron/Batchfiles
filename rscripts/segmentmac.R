@@ -13,7 +13,7 @@ dirchosen <- tk_choose.dir(caption = "Select directory");
 setwd(dirchosen)
 
 #generates a list of files in that directory:
-filesandpaths <- list.files(path=dirchosen, pattern="*THR-1.tif", full.names=TRUE);
+filesandpaths <- list.files(path=dirchosen, pattern="*THR-mod-1.tif", full.names=TRUE);
 
 #Now we will apply all functions to the list of files:
 for (fileandpath in filesandpaths){
