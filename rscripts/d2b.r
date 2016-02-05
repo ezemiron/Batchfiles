@@ -30,6 +30,13 @@ classB <- as.numeric(classB)
 if(classB==0){
   classB <- NULL
 }
+VoxX <- readline(prompt = "Enter voxel dimension x (in nm): \n ")
+VoxX <- as.numeric(VoxX)
+VoxY <- readline(prompt = "Enter voxel dimension y (in nm): \n ")
+VoxY <- as.numeric(VoxY)
+VoxZ <- readline(prompt = "Enter voxel dimension z (in nm): \n ")
+VoxZ <- as.numeric(VoxZ)
+
 
 #generates a list of files in that directory:
 filesandpaths <- list.files(path=a, pattern="*SEG.tif", full.names=TRUE);
@@ -54,7 +61,8 @@ for (fileandpath in filesandpaths){
   #voxel <- c(xres,yres,zres)
   #FIXME: somehow the "x.resolution" and "y.resolution" are displaying incorrect values. eg 24 um nm istead of 41
   #until then this will have to be set manually:
-  vox  <- c(41, 41, 125)/1000
+  #(the voxel dims for Oxford V3 are 41,41,125 for Munich 39.5,39.5,125)
+  vox  <- c(VoxX, VoxY, VoxZ)/1000
   
   x.microns <- (dim(img.classes)*vox)[2]
   y.microns <- (dim(img.classes)*vox)[1]
@@ -101,6 +109,35 @@ for (fileandpath in filesandpaths){
   savename <- gsub(".csv","", csv1name);
   savename <- paste0(savename, "-d2b-C",classA,"-C",classB,".csv");
   write.csv(d2b,savename);
+  
+  
+#    ################ Start work on 2 coordinate set:
+#    cat("coordinate data 2\n")
+#  # add here the link from image to csvs 
+#  csv2name <- gsub("_SEG.tif","-data_2.csv",filename);
+#  csv2path <- paste(a, csv2name, sep= "/");
+#  # read the csv:
+#  points2 <- read.csv(csv2path, header=TRUE);
+#  #reshape csv
+#  points2 <- points2[,1:3]
+#  #convert from nm to um
+#  points2 <- points2/1000
+#  #reshape from xyz to yxz for use in distance2border
+#  points2 <- data.frame(points2[2],points2[1],points2[3])
+#  
+
+#  d2b2 <- distance2border(points2,img.classes,x.microns,y.microns,z.microns,
+#                               class1=classA, class2=classB)
+#  
+#  #negative values in d2b represent points outside classA, 
+#  #but it should be the other way round according to 
+#  #the documentation, so fixed it: 
+#  d2b2 <- d2b2*(-1)
+#  
+#  
+#  savename2 <- gsub(".csv","", csv2name);
+#  savename2 <- paste0(savename2, "-d2b-C",classA,"-C",classB,".csv");
+#  write.csv(d2b2,savename2);
   
 }
 rm(list=ls())
