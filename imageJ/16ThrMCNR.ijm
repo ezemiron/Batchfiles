@@ -16,48 +16,61 @@ for (i=0; i<list.length; i++)
 
       open(filename);
 
-          SIR=getTitle();
-          RAW=replace(SIR,"(_SIR_EAL.dv)","_EAL.dv");
-          //runs the SIMcheck 16bit mode threshold (16bit):
-          run("Threshold and 16-bit Conversion", "auto-scale");
-          THR=replace(SIR, "(.dv)","_THR");
-          saveAs("TIFF",dir2+THR);     //saves as a new tiff in dir2
-          THR=getTitle();
+      SIR=getTitle();
+      RAW=replace(SIR,"(_SIR_EAL.dv)","_EAL.dv");
+      //runs the SIMcheck 16bit mode threshold (16bit):
+      run("Threshold and 16-bit Conversion", "auto-scale");
+      THR=replace(SIR, "(.dv)","_THR");
+      saveAs("TIFF",dir2+THR);     //saves as a new tiff in dir2
+      THR=getTitle();
 
-      //Open raw .dv
-      open(RAW);
+  //Open raw .dv
+  open(RAW);
 
-          //make the SIMcheck modulation contrast (32bit)
-          run("Modulation Contrast", "angles=3 phases=5 z=1");
-          //make the same size
-          run("Scale...","x=2 y=2 z=1.0 width=512 height=512 interpolation=Bicubic average create title=scaled");
-          //run("Threshold...");
-          setThreshold(5.0000, 50.0000);
-          run("NaN Background", "stack");
-          //make it a binary mask (8bit)
-          run("Convert to Mask", "method=Default background=Default");
-          //Turn it to 16bit to make it compatible with next step (16bit)
-          run("16-bit");
+      //make the SIMcheck modulation contrast (32bit)
+      run("Modulation Contrast", "angles=3 phases=5 z=1");
+      MCN=getTitle();
+      MCNtxt=replace(MCN, "_MCN","_MCN-log.txt");
+      saveAs("TIFF",dir2+MCN);
+      
+      //make the same size
+      run("Scale...","x=2 y=2 z=1.0 width=512 height=512 interpolation=Bicubic average create title=scaled");
+      //run("Threshold...");
+      setThreshold(5.0000, 50.0000);
+      run("NaN Background", "stack");
+      //make it a binary mask (8bit)
+      run("Convert to Mask", "method=Default background=Default");
+      //Turn it to 16bit to make it compatible with next step (16bit)
+      run("16-bit");
 
-          //but multiply the range to make it scale to 16bit
-          run("Multiply...", "value=257 stack");
+      //but multiply the range to make it scale to 16bit
+      run("Multiply...", "value=257 stack");
 
       //apply the 16bit modulation mask
       imageCalculator("AND create stack",THR,"scaled");
 
       saveAs("TIFF",dir2+string+"_THR-mod");     //saves as a new tiff in dir2
 
+
+//      closes all open images
       while (nImages>0) 
           { 
           selectImage(nImages); 
           close(); 
           }
+
+//      Saves then closes log
+    if (isOpen("Log")) {
+      selectWindow("Log");
+      saveAs("text",dir2+MCNtxt);
+      run("Close");
+      }
+
     }
-  
 
 }
 
-
+print("All files have been cleaned :D")
 
 
 
