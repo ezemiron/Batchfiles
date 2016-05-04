@@ -6,43 +6,47 @@
 require(bioimagetools)
 require(parallel)
 require(tcltk)
-require(EBImage)
+#require(EBImage)
 
 #Choose a directory:
 dirchosen <- tk_choose.dir(caption = "Select directory");
 setwd(dirchosen)
 
 #generates a list of files in that directory:
-filesandpaths <- list.files(path=dirchosen, pattern="*THR-mod-1.tif", full.names=TRUE);
+allfilesandpaths <- list.files(path=dirchosen, pattern=".tif", full.names=TRUE);
+filesandpaths <- list.files(path=dirchosen, pattern="*THR.tif", full.names=TRUE);
 
 #Now we will apply all functions to the list of files:
 for (fileandpath in filesandpaths){
     # load file:
     img <- readTIF (fileandpath); #This opens the 16bit tiff with all channels correclty
-    chromatin <- img[ , ,3, ] #finds the chromatin channel
+    chromatin <- img[ , ,2, ] #finds the chromatin channel
     
     filename <- basename(fileandpath)
-    maskname <- gsub(".tif","-dapi_mask.tif",filename)
+    maskname <- gsub(".tif","_THR_mask.tif",filename)
     maskandpath <- paste(dirchosen, maskname, sep="/")
-    mask <- readTIF(maskandpath) #finds the mask
-    mask=mask==1
-    if (! identical (dim (mask), dim (chromatin)))
-   stop ("Chromatin landscape and MASK are of different sizes"); 
-#this should no longer happen given that both of these are taken from 
-#the same file and not manually selected
-    
-    cat(paste("Segmenting file:",filename,"\n" ))
-#    The segmentation:
-    seg<-segment(chromatin,7,0.1,1/3,mask=mask, maxit=30,varfixed=TRUE,inforce.nclust=TRUE,start="equal");
-    
-#    Rescaling so imageJ lut can read the output
-    segscale=seg$class/length(seg$mu)
-    
-    savename <- gsub(".tif","_SEG.tif",filename)
-    savepath <- paste(dirchosen, savename, sep="/")
-    writeTIF (segscale, savename);
-    
-    
+    matchtest <- is.na((match(maskandpath, allfilesandpaths)))
+
+    if ( matchtest == FALSE){ 
+      mask <- readTIF(maskandpath) #finds the mask
+      mask=mask==1
+      if (! identical (dim (mask), dim (chromatin)))
+      stop ("Chromatin landscape and MASK are of different sizes"); 
+  #this should no longer happen given that both of these are taken from 
+  #the same file and not manually selected
+      
+      cat(paste("Segmenting file:",filename,"\n" ))
+  #    The segmentation:
+      seg<-segment(chromatin,7,0.1,1/3,mask=mask, maxit=30,varfixed=TRUE,inforce.nclust=TRUE,start="equal");
+      
+  #    Rescaling so imageJ lut can read the output
+      segscale=seg$class/length(seg$mu)
+      
+      savename <- gsub(".tif","_SEG.tif",filename)
+      savepath <- paste(dirchosen, savename, sep="/")
+      writeTIF (segscale, savename);
+    }
+
 }
 
 

@@ -9,7 +9,7 @@ for (i=0; i<list.length; i++) {
     string=replace(list[i],"(.tif)","-1"); 
     
     
-    if (endsWith(filename, "SIR_EAL_THR-mod.tif")) {
+    if (endsWith(filename, "SIR_EAL_THR.tif")) {
     
     
     open(filename);
