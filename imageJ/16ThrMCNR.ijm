@@ -66,7 +66,8 @@ for (i=0; i<list.length; i++)
   //make it a binary mask (8bit)
       run("Convert to Mask", "method=Default background=Dark");
 
-
+  //remove overlays if present (any overlay will stop the scale function):
+      run("Remove Overlay");
   //make the same size
       run("Scale...","x=2 y=2 z=1.0 width=&w height=&h interpolation=Bicubic average create title=scaled");
       
