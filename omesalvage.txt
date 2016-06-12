@@ -12,9 +12,15 @@
 #Use this to move all files not tifs or dvs from directory "." to another directory:
 find . -type f ! -name "*.tif" ! -name "*.dv" -exec mv {} ~/Documents/Microscopy/2015/2015.08/EM15-08-B/ \;
 
+#Use this to COPY all files in this directory and below which have “*histone mod*” and end in X or Y to somewhere else
+find . -type f \( -name "*H3K4me3*" -and \( -name "*EAL_THR.tif" -or -name "*MCNR-mask.tif" \) \) -exec cp {} /Volumes/wolf4192/papers/chrom_marks-da$
 
 
+find . -type f \( -name "*EAL_THR.tif" -or -name "*_THR_mask.tif" \) -exec cp {} /Volumes/wolf4192/data/OLDSYS \;
 find . -type f -name "*MCNR-mask.tif" -name "*SIR_EAL_THR.tif" -exec cp {} ~/data/ \;
+
+
 
 #finds all files that finish with centroids.csv and are also empty and removes them:
 find . -size 0b -a -type f -name "*centroids.csv" -exec rm -f {} \;
+

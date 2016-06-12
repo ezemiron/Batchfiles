@@ -11,16 +11,21 @@ dirchosen <- tk_choose.dir(caption = "Select directory");
 setwd(dirchosen)
 
 varname  <- readline(prompt = "Enter immunofluorescense target:")
+classA <- readline(prompt = "Enter first reference chromatin class (1-7):")
+classB <- readline(prompt = "Enter second reference chromatin class (0-7):")
 # name  <- paste0(varname, "*-distn.csv")
 # n <- c(NA,NA,NA,NA,NA,NA,NA,NA)
 # df  <- data.frame(1:7)
 # df[1] <- NULL
-df  <- data.frame(class=1:7)
+
+
+
 #df generates a list of files in that directory:
 allfilesandpaths <- list.files(path=dirchosen, pattern= varname, full.names=TRUE);
 filesandpaths  <- grep("*-distn.csv",allfilesandpaths, value = TRUE)
 for (fileandpath in filesandpaths){
   
+  df  <- data.frame(class=1:7)
   csv1 <- read.csv(fileandpath, colClasses=c("NULL","NULL","NULL","NULL","NULL","NULL", NA,"NULL"))
   df  <- cbind(df,csv1)
 
