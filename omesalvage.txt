@@ -11,3 +11,10 @@
 
 #Use this to move all files not tifs or dvs from directory "." to another directory:
 find . -type f ! -name "*.tif" ! -name "*.dv" -exec mv {} ~/Documents/Microscopy/2015/2015.08/EM15-08-B/ \;
+
+
+
+find . -type f -name "*MCNR-mask.tif" -name "*SIR_EAL_THR.tif" -exec cp {} ~/data/ \;
+
+#finds all files that finish with centroids.csv and are also empty and removes them:
+find . -size 0b -a -type f -name "*centroids.csv" -exec rm -f {} \;
