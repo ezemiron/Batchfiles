@@ -4,6 +4,8 @@
 library (ggplot2)
 
 G1 <- read.csv("path_to_G1")
+# Could try
+# csv <- read.csv(fileandpath, colClasses=c("NULL", NA,))
 G0 <- read.csv("path_to_G0")
 
 #take only the distance:
