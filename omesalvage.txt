@@ -24,3 +24,6 @@ find . -type f -name "*MCNR-mask.tif" -name "*SIR_EAL_THR.tif" -exec cp {} ~/dat
 #finds all files that finish with centroids.csv and are also empty and removes them:
 find . -size 0b -a -type f -name "*centroids.csv" -exec rm -f {} \;
 
+
+#counts the number of files of a particular type
+find results/ -type f -name *d2b* | wc -l
