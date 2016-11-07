@@ -13,7 +13,8 @@
 find . -type f ! -name "*.tif" ! -name "*.dv" -exec mv {} ~/Documents/Microscopy/2015/2015.08/EM15-08-B/ \;
 
 #Use this to COPY all files in this directory and below which have “*histone mod*” and end in X or Y to somewhere else
-find . -type f \( -name "*H3K4me3*" -and \( -name "*EAL_THR.tif" -or -name "*MCNR-mask.tif" \) \) -exec cp {} /Volumes/wolf4192/papers/chrom_marks-da$
+find . -type f \( -name "*H3K4me3*" -and \( -name "*EAL_THR.tif" -or -name "*MCNR-mask.tif" \) \) -exec cp {} /Volumes/wolf4192/papers/chrom_marks... \;
+
 
 
 find . -type f \( -name "*EAL_THR.tif" -or -name "*_THR_mask.tif" \) -exec cp {} /Volumes/wolf4192/data/OLDSYS \;
@@ -25,5 +26,26 @@ find . -type f -name "*MCNR-mask.tif" -name "*SIR_EAL_THR.tif" -exec cp {} ~/dat
 find . -size 0b -a -type f -name "*centroids.csv" -exec rm -f {} \;
 
 
+
 #counts the number of files of a particular type
 find results/ -type f -name *d2b* | wc -l
+
+
+
+
+renames all the files, skipping 10 characters, starting from 0 (ie the begining of the string), then adds C127_ followed by the rest of the characters in the string after the original 10th character.
+
+for file in * ; do
+    mv ./"$file" "${file:0:10}C127_${file:10}"
+done
+
+
+Use echo to "dry run"
+for file in * ; do
+    echo mv ./"$file" "${file:0:10}C127_${file:10}"
+done
+
+
+for file in * ; do
+    echo mv ./"$file" "${file:0:10}IMR90_${file:10}"
+done
