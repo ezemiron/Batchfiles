@@ -28,3 +28,7 @@ ggplot(comp, aes(Microns, fill = Phase)) + geom_density(alpha = 0.2)
 #histogram:
 ggplot(comp, aes(Microns, fill = Phase)) + geom_histogram(alpha = 0.5)
 
+
+for plotting coloured scatterplots with a dataframe: x, y, z, d2b
+plotxyz <- ggplot(xyzpoints,aes(x,y))
+plotxyz +geom_point(aes(colour = d2b))
